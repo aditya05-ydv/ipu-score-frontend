@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:       #eef2f7;
+  --s1:       #ffffff;
+  --s2:       #f6f8fb;
+  --s3:       #eef2f7;
+  --border:   #e2e8f0;
+  --border2:  #cbd5e1;
+  --navy:     #1a2e4a;
+  --blue:     #3b82f6;
+  --blue-lt:  #eff6ff;
+  --green:    #16a34a;
+  --green-lt: #f0fdf4;
+  --red:      #dc2626;
+  --red-lt:   #fef2f2;
+  --yellow:   #d97706;
+  --yel-lt:   #fffbeb;
+  --text:     #1a2332;
+  --muted:    #64748b;
+  --muted2:   #94a3b8;
+  --table-hd: #1a2e4a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; width: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+@layer components {
+  .input-base {
+    @apply w-full rounded-lg px-3 py-2.5 text-[13px]
+           text-[var(--text)] bg-[var(--s2)]
+           border border-[var(--border)]
+           outline-none transition-all;
+    font-family: 'Inter', sans-serif;
+  }
+  .input-base:focus {
+    @apply border-[var(--blue)] bg-white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  .input-base::placeholder { color: var(--muted2); }
+  select.input-base { -webkit-appearance: none; background-color: var(--s2); }
+  select.input-base option { background: #fff; color: var(--text); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: fadeIn 0.25s ease forwards; }
+
+#root {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
