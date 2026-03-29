@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { GRADES, toPercent, getDivision } from '../utils/gradeUtils';
 
-const BACKEND = 'http://localhost:5000';
+const BACKEND = import.meta.env.VITE_API_URL;
+
 
 const gradeByTotal = (total) => {
   const n = Number(total);
@@ -288,8 +289,8 @@ await Promise.all(
       setStep('result');
 
     } catch {
-      setError('Network error. Make sure backend is running on port 5000.');
-    }
+  setError('Network error. Please try again.');
+}
     setLoading(false);
   };
 
