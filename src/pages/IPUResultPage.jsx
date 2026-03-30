@@ -392,6 +392,7 @@ await Promise.all(
             <div className="flex items-center gap-3 mb-2">
               {captchaUrl && (
                 <img src={captchaUrl} alt="CAPTCHA" className="rounded-lg"
+                  crossOrigin="use-credentials"
                   style={{ height: 44, border: '1px solid var(--border)', background: '#fff' }}/>
               )}
               <button onClick={loadCaptcha}
