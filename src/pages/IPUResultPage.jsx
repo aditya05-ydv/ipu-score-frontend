@@ -189,22 +189,35 @@ export default function IPUResultPage({ session, setSession }) {
   const [username,   setUsername]   = useState('');
   const [password,   setPassword]   = useState('');
   const [captchaVal, setCaptchaVal] = useState('');
-  const [captchaUrl, setCaptchaUrl] = useState('');
+  const [captchaImg, setCaptchaImg] = useState('');
+  const [ipuCookie,  setIpuCookie]  = useState('');
   const [loading,    setLoading]    = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   const [error,      setError]      = useState('');
   const [activeSem,  setActiveSem]  = useState('overall');
 
-  const loadCaptcha = () => {
-    setCaptchaUrl(`${BACKEND}/api/captcha?t=${Date.now()}`);
+  const loadCaptcha = async () => {
     setCaptchaVal('');
+    setCaptchaImg('');
+    try {
+      const res  = await fetch(`${BACKEND}/api/captcha?t=${Date.now()}`);
+      const data = await res.json();
+      if (data.success) {
+        setCaptchaImg(data.captchaImage);
+        setIpuCookie(data.ipuCookie);
+      } else {
+        setError('Failed to load CAPTCHA. Try again.');
+      }
+    } catch {
+      setError('Failed to load CAPTCHA. Backend may be starting up.');
+    }
   };
 
   useEffect(() => { loadCaptcha(); }, []);
 
   const fetchCredit = async (code) => {
     try {
-      const res  = await fetch(`${BACKEND}/api/credit/${code}`, { credentials: 'include' });
+      const res  = await fetch(`${BACKEND}/api/credit/${code}`);
       const data = await res.json();
       return data;
     } catch {
@@ -257,9 +270,9 @@ await Promise.all(
     try {
       setLoadingMsg('Logging into IPU portal…');
       const loginRes  = await fetch(`${BACKEND}/api/login`, {
-        method: 'POST', credentials: 'include',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, captcha: captchaVal }),
+        body: JSON.stringify({ username, password, captcha: captchaVal, ipuCookie }),
       });
       const loginData = await loginRes.json();
 
@@ -268,11 +281,14 @@ await Promise.all(
         loadCaptcha(); setLoading(false); return;
       }
 
+      // Use the updated IPU cookie from login response
+      const loginCookie = loginData.ipuCookie || ipuCookie;
+
       setLoadingMsg('Fetching all semester results…');
       const resultRes  = await fetch(`${BACKEND}/api/result`, {
-        method: 'POST', credentials: 'include',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ ipuCookie: loginCookie }),
       });
       const resultData = await resultRes.json();
 
@@ -390,9 +406,8 @@ await Promise.all(
               Security Captcha
             </label>
             <div className="flex items-center gap-3 mb-2">
-              {captchaUrl && (
-                <img src={captchaUrl} alt="CAPTCHA" className="rounded-lg"
-                  crossOrigin="use-credentials"
+              {captchaImg && (
+                <img src={captchaImg} alt="CAPTCHA" className="rounded-lg"
                   style={{ height: 44, border: '1px solid var(--border)', background: '#fff' }}/>
               )}
               <button onClick={loadCaptcha}
