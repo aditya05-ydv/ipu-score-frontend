@@ -195,12 +195,12 @@ export default function IPUResultPage({ session, setSession }) {
   const [error,      setError]      = useState('');
   const [activeSem,  setActiveSem]  = useState('overall');
 
-  useEffect(() => { loadCaptcha(); }, []);
-
   const loadCaptcha = () => {
     setCaptchaUrl(`${BACKEND}/api/captcha?t=${Date.now()}`);
     setCaptchaVal('');
   };
+
+  useEffect(() => { loadCaptcha(); }, []);
 
   const fetchCredit = async (code) => {
     try {
