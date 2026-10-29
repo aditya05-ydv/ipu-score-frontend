@@ -1,3 +1,5 @@
+Backend repository: https://github.com/aditya05-ydv/ipu-score-backend
+
 🎓 IPU Score — MERN Stack Academic Result Dashboard
 
 A full-stack web application that helps GGSIPU (Guru Gobind Singh Indraprastha University) students view their academic results across multiple semesters in a single dashboard. IPU Score retrieves results from the official examination portal, processes subject data, calculates SGPA and CGPA, and presents academic performance through interactive graphs and backlog tracking.
